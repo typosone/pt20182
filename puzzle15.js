@@ -25,11 +25,17 @@ phina.define('MainScene', {
         // ピースをまとめるやつ
         const pieceGroup = DisplayElement().addChildTo(this);
 
+        // ピースを生成する二重のループ
         PIECE_NUM_XY.times((spanX) => {
             PIECE_NUM_XY.times( (spanY) => {
-                const piece = Piece().addChildTo(pieceGroup);
+                const num = spanX * PIECE_NUM_XY + spanY + 1;
+                const piece = Piece(num).addChildTo(pieceGroup);
                 piece.x = grid.span(spanX) + PIECE_OFFSET;
                 piece.y = grid.span(spanY) + PIECE_OFFSET;
+
+                if (num === 16) {
+                    piece.hide();
+                }
             });
         });
     }
@@ -38,7 +44,8 @@ phina.define('MainScene', {
 phina.define('Piece', {
     superClass: 'RectangleShape',
 
-    init: function () {
+    // コンストラクタ
+    init: function (num) {
         this.superInit({
             width: PIECE_SIZE,
             height: PIECE_SIZE,
@@ -46,6 +53,14 @@ phina.define('Piece', {
             fill: 'silver',
             stroke: 'white',
         });
+
+        this.num = num;
+
+        this.label = Label({
+           text: this.num,
+           fontSize: PIECE_SIZE * 0.8,
+           fill: 'white'
+        }).addChildTo(this);
     }
 });
 
