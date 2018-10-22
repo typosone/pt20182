@@ -63,7 +63,7 @@ phina.define('MainScene', {
 
         // シャッフルボタンが押されたとき
         shuffleButton.onpush = function () {
-            (100).times(() => {
+            (1000).times(() => {
                 scene.shufflePieces();
             });
 
@@ -138,7 +138,7 @@ phina.define('MainScene', {
 
         return result;
     },
-    shufflePieces: function() {
+    shufflePieces: function () {
         const scene = this;     // メインシーン参照用
 
         // 隣接ピース格納用
@@ -146,21 +146,17 @@ phina.define('MainScene', {
         // 空白ピースを得る
         const blank = this.getBlankPiece();
 
-        [1, 0, -1].each((i) => {
-            [1, 0, -1].each((j) => {
-                if (i !== j) {
-                    const x = blank.x + i * GRID_SIZE;
-                    const y = blank.y + j * GRID_SIZE;
-                    const target = scene.getPieceByXY(x, y);
-                    if (target) {
-                        pieces.push(target);
-                    }
-                }
-            });
+        [[0, -1], [1, 0], [0, 1], [-1, 0]].each(([i, j]) => {
+            const x = blank.x + i * GRID_SIZE;
+            const y = blank.y + j * GRID_SIZE;
+            const target = scene.getPieceByXY(x, y);
+            if (target) {
+                pieces.push(target);
+            }
         });
         this.movePiece(pieces.random(), 'instantly');
     },
-    checkPiecePosition: function() {
+    checkPiecePosition: function () {
         const result = this.pieceGroup.children.some((piece) => {
             return (piece.x !== piece.correctX || piece.y !== piece.correctY)
         });
@@ -172,7 +168,8 @@ phina.define('MainScene', {
             })
         }
     }
-});
+})
+;
 
 phina.define('Piece', {
     superClass: 'RectangleShape',
