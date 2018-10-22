@@ -150,7 +150,8 @@ phina.define('Ball', {
 
 phina.main(() => {
     const app = GameApp({
-        title: "Break Out"
+        title: "Break Out",
+        fps: 60,
     });
 
     app.run();
