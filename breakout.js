@@ -25,6 +25,8 @@ phina.define('MainScene', {
                     .setPosition(scene.gridX.span(spanX), scene.gridY.span(spanY));
             });
         });
+
+
         // パドル移動ライン
         const paddleY = this.gridY.span(14.5);
         // パドル設置
@@ -108,6 +110,95 @@ phina.define('MainScene', {
                 ball.vx = -dx / 5;
             }
         }
+
+        this.blockGroup.children.some(block => {
+            // ボールとブロックが衝突してなかったらおしまい
+            if (!ball.hitTestElement(block)) {
+                return false;
+            }
+
+            // ブロックを削除
+            block.remove();
+
+            // ブロックのどこに当たったか詳しく調べる
+
+            // 左上角
+            if (ball.top < block.top && ball.left < block.left) {
+                //位置補正
+                ball.right = block.left;
+                ball.bottom = block.top;
+                //移動方向設定
+                ball.vx = -ball.speed;
+                ball.vy = -ball.speed;
+                return true;
+            }
+
+            // 右上角
+            if (ball.top < block.top && ball.right > block.right) {
+                //位置補正
+                ball.left = block.right;
+                ball.bottom = block.top;
+                //移動方向設定
+                ball.vx = ball.speed;
+                ball.vy = -ball.speed;
+                return true;
+            }
+
+            // 左下角
+            if (ball.bottom > block.bottom && ball.left < block.left) {
+                //位置補正
+                ball.right = block.left;
+                ball.top = block.bottom;
+                //移動方向設定
+                ball.vx = -ball.speed;
+                ball.vy = ball.speed;
+                return true;
+            }
+
+            // 右下角
+            if (ball.bottom > block.bottom && ball.right > block.right) {
+                //位置補正
+                ball.left = block.right;
+                ball.top = block.bottom;
+                //移動方向設定
+                ball.vx = ball.speed;
+                ball.vy = ball.speed;
+                return true;
+            }
+
+            // 左側
+            if (ball.left < block.left) {
+                //位置補正
+                ball.right = block.left;
+                //移動方向設定
+                ball.vx = -ball.vx;
+                return true;
+            }
+
+            // 右側
+            if (ball.right > block.right) {
+                //位置補正
+                ball.left = block.right;
+                //移動方向設定
+                ball.vx = -ball.vx;
+                return true;
+            }
+
+            // 上側
+            if (ball.top < block.top) {
+                //位置補正
+                ball.bottom = block.top;
+                //移動方向設定
+                ball.vy = -ball.vy;
+                return true;
+            }
+
+            // 下側
+            ball.top = block.bottom;
+            ball.vy = -ball.vy;
+
+            return true;
+        });
     },
 });
 
